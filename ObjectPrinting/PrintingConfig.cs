@@ -19,16 +19,15 @@ namespace ObjectPrinting
             return new PropertyPrintingConfig<TOwner, TPropType>(this);
         }
         
-        
+        public PrintingConfig<TOwner> ExcludeProp<TPropType>(Func<TOwner, TPropType> func)
+        {
+            return this;
+        }
         public PrintingConfig<TOwner> ExcludeType<TPropType>()
         {
             return this;
         }
 
-        public PrintingConfig<TOwner> UseAltSerialization<TPropType>(Func<TPropType, string> altSerialize)
-        {
-            return this;
-        }
         
         public string PrintToString(TOwner obj)
         {
@@ -61,6 +60,8 @@ namespace ObjectPrinting
             }
             return sb.ToString();
         }
+
+
     }
 
     public class PropertyPrintingConfig<TOwner, TPropType> : IPropertyPrintingConfig<TOwner, TPropType>
@@ -80,11 +81,6 @@ namespace ObjectPrinting
             return printingConfig;
         }
         
-
-//        public PrintingConfig<TOwner> Using(CultureInfo cultureInfo)
-//        {
-//            return printingConfig;
-//        }
     }
 
     public interface IPropertyPrintingConfig<TOwner, TPropType>
@@ -99,6 +95,22 @@ namespace ObjectPrinting
             CultureInfo cultureInfo)
         {
             return ((IPropertyPrintingConfig<TOwner, double>)propertyPrintingConfig)
+                .PrintingConfig;
+        }
+        
+        public static PrintingConfig<TOwner> Using<TOwner>(
+            this PropertyPrintingConfig<TOwner, int> propertyPrintingConfig,
+            CultureInfo cultureInfo)
+        {
+            return ((IPropertyPrintingConfig<TOwner, int>)propertyPrintingConfig)
+                .PrintingConfig;
+        }
+
+        public static PrintingConfig<TOwner> TrimToLength<TOwner>(
+            this PropertyPrintingConfig<TOwner, string> propertyPrintingConfig,
+            int length)
+        {
+            return ((IPropertyPrintingConfig<TOwner, string>)propertyPrintingConfig)
                 .PrintingConfig;
         }
     };

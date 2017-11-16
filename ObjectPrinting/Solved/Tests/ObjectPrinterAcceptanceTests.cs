@@ -4,6 +4,7 @@ using NUnit.Framework;
 
 namespace ObjectPrinting.Solved.Tests
 {
+
 	[TestFixture]
 	public class ObjectPrinterAcceptanceTests
 	{
@@ -21,9 +22,9 @@ namespace ObjectPrinting.Solved.Tests
 				.Printing<double>().Using(CultureInfo.InvariantCulture)
 				//4. Настроить сериализацию конкретного свойства
 				//5. Настроить обрезание строковых свойств (метод должен быть виден только для строковых свойств)
-				.Printing(p => p.Name).TrimmedToLength(10)
+				.Printing(p => p.Name).TrimmedToLength(10).
 				//6. Исключить из сериализации конкретного свойства
-				.Excluding(p => p.Age);
+				.Excluding(p => p.Age).
 
 			string s1 = printer.PrintToString(person);
 			
