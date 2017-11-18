@@ -29,7 +29,14 @@ namespace ObjectPrinting.Tests
             string s1 = printer.PrintToString(person);
 
 			//7. Синтаксический сахар в виде метода расширения, сериализующего по-умолчанию		
+			string s2 = person.PrintToString();
+
 			//8. ...с конфигурированием
+			string s3 = person.PrintToString(
+				o => o
+				.ExcludeProp(p=>p.Name)
+				.ExcludeType<int>()
+				);
 		}
 	}
 }
