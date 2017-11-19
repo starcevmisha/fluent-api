@@ -8,24 +8,30 @@ namespace ObjectPrinting
             this PropertyPrintingConfig<TOwner, double> propertyPrintingConfig,
             CultureInfo cultureInfo)
         {
-            return ((IPropertyPrintingConfig<TOwner, double>)propertyPrintingConfig)
+            var printingConfig = ((IPropertyPrintingConfig<TOwner, double>)propertyPrintingConfig)
                 .PrintingConfig;
+            printingConfig.cultures.Add(typeof(double), cultureInfo);
+            return printingConfig;
         }
         
         public static PrintingConfig<TOwner> Using<TOwner>(
             this PropertyPrintingConfig<TOwner, int> propertyPrintingConfig,
             CultureInfo cultureInfo)
         {
-            return ((IPropertyPrintingConfig<TOwner, int>)propertyPrintingConfig)
+            var printingConfig = ((IPropertyPrintingConfig<TOwner, int>)propertyPrintingConfig)
                 .PrintingConfig;
+            printingConfig.cultures.Add(typeof(int), cultureInfo);
+            return printingConfig;
         }
 
         public static PrintingConfig<TOwner> TrimToLength<TOwner>(
             this PropertyPrintingConfig<TOwner, string> propertyPrintingConfig,
             int length)
         {
-            return ((IPropertyPrintingConfig<TOwner, string>)propertyPrintingConfig)
+            var printingConfig = ((IPropertyPrintingConfig<TOwner, string>)propertyPrintingConfig)
                 .PrintingConfig;
+            printingConfig.MaxLength = length;
+            return printingConfig;
         }
     };
 }

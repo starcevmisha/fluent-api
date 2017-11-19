@@ -12,7 +12,7 @@ namespace ObjectPrinting
         public static string PrintToString<T>(this T obj, 
             Func<PrintingConfig<T>, PrintingConfig<T>> configFunc)
         {
-            return configFunc(ObjectPrinter.For<T>()).PrintToString();
+            return configFunc(ObjectPrinter.For<T>()).PrintToString(obj);
         }
     }
 }
