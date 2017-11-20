@@ -14,7 +14,7 @@ namespace ObjectPrinting
         public int? MaxLength = null;
         private readonly HashSet<Type> excludedTypes;
         private readonly HashSet<string> excludedProperties;
-        public readonly Dictionary<Type, CultureInfo> cultures;
+        internal readonly Dictionary<Type, CultureInfo> Cultures;
         private readonly Dictionary<Type, Delegate> typeSerializator;
         private readonly Dictionary<string, Delegate> propSerializator;
 
@@ -22,7 +22,7 @@ namespace ObjectPrinting
         {
             excludedTypes = new HashSet<Type>();
             excludedProperties = new HashSet<string>();
-            cultures = new Dictionary<Type, CultureInfo>();
+            Cultures = new Dictionary<Type, CultureInfo>();
             typeSerializator = new Dictionary<Type, Delegate>();
             propSerializator = new Dictionary<string, Delegate>();
         }
@@ -118,7 +118,7 @@ namespace ObjectPrinting
                 return typeSerializator[propertyInfo.PropertyType]
                     .DynamicInvoke(propertyInfo.GetValue(obj)) + Environment.NewLine;
 
-            if (cultures.ContainsKey(propertyInfo.PropertyType))
+            if (Cultures.ContainsKey(propertyInfo.PropertyType))
             {
                 return ((IFormattable)propertyInfo.GetValue(obj))
                     .ToString(null, CultureInfo.CurrentCulture) + Environment.NewLine;

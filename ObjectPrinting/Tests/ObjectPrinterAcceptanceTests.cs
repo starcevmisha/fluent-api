@@ -8,6 +8,8 @@ namespace ObjectPrinting.Tests
 	[TestFixture]
 	public class ObjectPrinterAcceptanceTests
 	{
+
+
 		[Test]
 		public void Demo()
 		{

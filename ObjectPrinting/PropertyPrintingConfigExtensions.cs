@@ -10,7 +10,7 @@ namespace ObjectPrinting
         {
             var printingConfig = ((IPropertyPrintingConfig<TOwner, double>)propertyPrintingConfig)
                 .PrintingConfig;
-            printingConfig.cultures.Add(typeof(double), cultureInfo);
+            printingConfig.Cultures.Add(typeof(double), cultureInfo);
             return printingConfig;
         }
         
@@ -20,7 +20,7 @@ namespace ObjectPrinting
         {
             var printingConfig = ((IPropertyPrintingConfig<TOwner, int>)propertyPrintingConfig)
                 .PrintingConfig;
-            printingConfig.cultures.Add(typeof(int), cultureInfo);
+            printingConfig.Cultures.Add(typeof(int), cultureInfo);
             return printingConfig;
         }
 
