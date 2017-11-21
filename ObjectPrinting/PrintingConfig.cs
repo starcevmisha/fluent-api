@@ -11,6 +11,8 @@ namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
+
+        internal int? maxNestedLevel = null;
         internal readonly Dictionary<string, int> TrimStringProperty = 
             new Dictionary<string, int>();
         private readonly HashSet<Type> excludedTypes= new HashSet<Type>();
@@ -69,11 +71,14 @@ namespace ObjectPrinting
             return PrintToString(obj, 0);
         }
 
+        private bool IsStop = false;
+        
         private string PrintToString(object obj, int nestingLevel)
         {
+
             if (obj == null)
                 return "null" + Environment.NewLine;
-
+            
             var finalTypes = new[]
             {
                 typeof(int), typeof(double), typeof(float), typeof(string),
@@ -83,19 +88,27 @@ namespace ObjectPrinting
             {
                 return obj + Environment.NewLine;
             }
-
+      
             var identation = new string('\t', nestingLevel + 1);
+
             var sb = new StringBuilder();
             var type = obj.GetType();
             sb.AppendLine(type.Name);
+
             foreach (var propertyInfo in type.GetProperties())
             {
                 if(excludedProperties.Contains(propertyInfo.Name))
                     continue;
                 if (excludedTypes.Contains(propertyInfo.PropertyType))
-                    continue;    
-                sb.Append(identation + propertyInfo.Name + " = " +                          
-                          PrintProperty(obj, nestingLevel, propertyInfo));
+                    continue;
+                if (identation.Length <= maxNestedLevel)
+                    sb.Append(identation + propertyInfo.Name + " = " +
+                              PrintProperty(obj, nestingLevel, propertyInfo));
+                else
+                {
+                    sb.Insert(sb.Length-Environment.NewLine.Length, "{}");
+                    break;
+                }
             }
             return sb.ToString();
         }
@@ -120,10 +133,16 @@ namespace ObjectPrinting
                 return ((IFormattable)propertyInfo.GetValue(obj))
                     .ToString(null, CultureInfo.CurrentCulture) + Environment.NewLine;
             }
+            
             return PrintToString(propertyInfo.GetValue(obj),
                 nestingLevel + 1);
         }
 
 
+        public PrintingConfig<TOwner> SetMaxNestedLevel(int max)
+        {
+            maxNestedLevel = max;
+            return this;
+        }
     }
 }
