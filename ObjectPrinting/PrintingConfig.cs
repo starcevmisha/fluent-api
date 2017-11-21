@@ -76,7 +76,6 @@ namespace ObjectPrinting
 
         private string PrintToString(object obj, int nestingLevel)
         {
-            //TODO apply configurations
             if (obj == null)
                 return "null" + Environment.NewLine;
 
@@ -123,7 +122,6 @@ namespace ObjectPrinting
                 return ((IFormattable)propertyInfo.GetValue(obj))
                     .ToString(null, CultureInfo.CurrentCulture) + Environment.NewLine;
             }
-
             return PrintToString(propertyInfo.GetValue(obj),
                 nestingLevel + 1);
         }
