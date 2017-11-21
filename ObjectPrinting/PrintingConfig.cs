@@ -11,8 +11,7 @@ namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
-
-        internal int? maxNestedLevel = null;
+        private int? maxNestedLevel = null;
         internal readonly Dictionary<string, int> TrimStringProperty = 
             new Dictionary<string, int>();
         private readonly HashSet<Type> excludedTypes= new HashSet<Type>();
@@ -101,14 +100,13 @@ namespace ObjectPrinting
                     continue;
                 if (excludedTypes.Contains(propertyInfo.PropertyType))
                     continue;
-                if (identation.Length <= maxNestedLevel)
-                    sb.Append(identation + propertyInfo.Name + " = " +
-                              PrintProperty(obj, nestingLevel, propertyInfo));
-                else
+                if (maxNestedLevel.HasValue && identation.Length > maxNestedLevel)
                 {
-                    sb.Insert(sb.Length-Environment.NewLine.Length, "{}");
+                    sb.Insert(sb.Length - Environment.NewLine.Length, "{}");
                     break;
                 }
+                sb.Append(identation + propertyInfo.Name + " = " +
+                          PrintProperty(obj, nestingLevel, propertyInfo));
             }
             return sb.ToString();
         }

@@ -47,7 +47,7 @@ namespace ObjectPrinting.Tests
 //            8. ...с конфигурированием
             string s3 = person.PrintToString(
                 o => o
-                    .SetMaxNestedLevel(2)
+                    .SetMaxNestedLevel(3)
                 );
             Console.WriteLine(s3);
         }

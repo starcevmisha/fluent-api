@@ -22,6 +22,7 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                 "Person",
                 "\tId = Guid",
+                "\tChild = null",
                 "\tHeight = 12,4",
                 "\tAge = 19")
                 + Environment.NewLine;
@@ -39,12 +40,14 @@ namespace ObjectPrinting.Tests
                               "Person",
                               "\tId = Guid",
                               "\tName = Alex",
+                              "\tChild = null",
                               "\tSurName = Petrov",
                               "\tHeight = 12,4",
                               "\tAge = 20")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .Printing<int>().Using(i => (i + 1).ToString())
+                
                 .PrintToString(person);
             actual.Should().Be(expected);
         }
@@ -56,6 +59,7 @@ namespace ObjectPrinting.Tests
                               "Person",
                               "\tId = Guid",
                               "\tName = Alex",
+                              "\tChild = null",
                               "\tSurName = Petrov",
                               "\tHeight = 12,4",
                               "\tAge = 19")
@@ -74,6 +78,7 @@ namespace ObjectPrinting.Tests
                               "Person",
                               "\tId = Guid",
                               "\tName = Alex",
+                              "\tChild = null",
                               "\tSurName = Petrov",
                               "\tHeight = System.Double",
                               "\tAge = 19")
@@ -91,6 +96,7 @@ namespace ObjectPrinting.Tests
                               "Person",
                               "\tId = Guid",
                               "\tName = Al",
+                              "\tChild = null",
                               "\tSurName = Petro",
                               "\tHeight = 12,4",
                               "\tAge = 19")
@@ -108,6 +114,7 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
+                              "\tChild = null",
                               "\tSurName = Petrov",
                               "\tHeight = 12,4",
                               "\tAge = 19")
@@ -124,6 +131,7 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
+                              "\tChild = null",
                               "\tSurName = Petrov",
                               "\tHeight = 12,4",
                               "\tAge = 19")
@@ -135,5 +143,67 @@ namespace ObjectPrinting.Tests
             actual.Should().Be(expected);
         }
 
+        [Test]
+        public void MaxNestedLevel_Is1_Test()
+        {
+            var testPerson = new Person
+            {
+                Name = "Alex", Age = 19, Height = 12.4,
+                Child = new Person {
+                    Name = "Alex", Age = 5, Height = 13,
+                    Child = new Person{Name = "Ivan", Age = 1, Height = 10}
+                }
+            };
+            
+            var expected = string.Join(Environment.NewLine,
+                               "Person",
+                               "\tId = Guid",
+                               "\tName = Alex",
+                               "\tChild = Person{}",
+                               "\tSurName = null",
+                               "\tHeight = 12,4",
+                               "\tAge = 19"
+                           ) + Environment.NewLine;
+            var actual = testPerson.PrintToString(
+                o => o
+                    .SetMaxNestedLevel(1)
+                );
+//            Console.WriteLine(actual);
+            actual.Should().Be(expected);
+        }
+        [Test]
+        public void MaxNestedLevel_Is2_Test()
+        {
+            var testPerson = new Person
+            {
+                Name = "Alex", Age = 19, Height = 12.4,
+                Child = new Person {
+                    Name = "Alex", Age = 5, Height = 13,
+                    Child = new Person{Name = "Ivan", Age = 1, Height = 10}
+                }
+            };
+            
+            var expected = string.Join(Environment.NewLine,
+                               "Person",
+                               "\tId = Guid",
+                               "\tName = Alex",
+                               "\tChild = Person",
+                               "\t\tId = Guid",
+                               "\t\tName = Alex",
+                               "\t\tChild = Person{}",
+                               "\t\tSurName = null",
+                               "\t\tHeight = 13",
+                               "\t\tAge = 5",
+                               "\tSurName = null",
+                               "\tHeight = 12,4",
+                               "\tAge = 19"
+                           ) + Environment.NewLine;
+            var actual = testPerson.PrintToString(
+                o => o
+                    .SetMaxNestedLevel(2)
+            );
+//            Console.WriteLine(actual);
+            actual.Should().Be(expected);
+        }
     }
 }
