@@ -30,7 +30,9 @@ namespace ObjectPrinting
         {
             var printingConfig = ((IPropertyPrintingConfig<TOwner, string>)propertyPrintingConfig)
                 .PrintingConfig;
-            printingConfig.MaxLength = length;
+            printingConfig.TrimStringProperty.Add(propertyPrintingConfig.propName,
+                length);
+            
             return printingConfig;
         }
     };

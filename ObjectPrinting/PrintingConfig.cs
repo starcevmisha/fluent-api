@@ -11,21 +11,16 @@ namespace ObjectPrinting
 {
     public class PrintingConfig<TOwner>
     {
-        public int? MaxLength = null;
-        private readonly HashSet<Type> excludedTypes;
-        private readonly HashSet<string> excludedProperties;
-        internal readonly Dictionary<Type, CultureInfo> Cultures;
-        private readonly Dictionary<Type, Delegate> typeSerializator;
-        private readonly Dictionary<string, Delegate> propSerializator;
-
-        public PrintingConfig()
-        {
-            excludedTypes = new HashSet<Type>();
-            excludedProperties = new HashSet<string>();
-            Cultures = new Dictionary<Type, CultureInfo>();
-            typeSerializator = new Dictionary<Type, Delegate>();
-            propSerializator = new Dictionary<string, Delegate>();
-        }
+        internal readonly Dictionary<string, int> TrimStringProperty = 
+            new Dictionary<string, int>();
+        private readonly HashSet<Type> excludedTypes= new HashSet<Type>();
+        private readonly HashSet<string> excludedProperties = new HashSet<string>();
+        internal readonly Dictionary<Type, CultureInfo> Cultures 
+            = new Dictionary<Type, CultureInfo>();
+        private readonly Dictionary<Type, Delegate> typeSerializator 
+            = new Dictionary<Type, Delegate>();
+        private readonly Dictionary<string, Delegate> propSerializator 
+            = new Dictionary<string, Delegate>();
 
         public PropertyPrintingConfig<TOwner, TPropType> Printing<TPropType>()
         {
@@ -86,8 +81,6 @@ namespace ObjectPrinting
             };
             if (finalTypes.Contains(obj.GetType()))
             {
-                if (obj is string str && MaxLength != null)
-                    return str.Substring(0, MaxLength.Value) + Environment.NewLine;
                 return obj + Environment.NewLine;
             }
 
@@ -109,6 +102,11 @@ namespace ObjectPrinting
 
         string PrintProperty(object obj, int nestingLevel, PropertyInfo propertyInfo)
         {
+            if (TrimStringProperty.ContainsKey(propertyInfo.Name))
+                return propertyInfo.GetValue(obj)
+                    .ToString()
+                    .Substring(0, TrimStringProperty[propertyInfo.Name]) + Environment.NewLine;
+            
             if (propSerializator.ContainsKey(propertyInfo.Name))
                 return propSerializator[propertyInfo.Name]
                     .DynamicInvoke(propertyInfo.GetValue(obj)) + Environment.NewLine;

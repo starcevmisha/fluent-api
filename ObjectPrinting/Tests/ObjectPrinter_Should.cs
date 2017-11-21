@@ -14,7 +14,7 @@ namespace ObjectPrinting.Tests
         [SetUp]
         public void SetUp()
         {
-            person = new Person { Name = "Alex", Age = 19, Height = 12.4};
+            person = new Person { Name = "Alex", SurName = "Petrov",Age = 19, Height = 12.4};
         }
         [Test]
         public void ExcludeType_Test()
@@ -22,8 +22,8 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                 "Person",
                 "\tId = Guid",
-                $"\tHeight = {person.Height}",
-                $"\tAge = {person.Age}")
+                "\tHeight = 12,4",
+                "\tAge = 19")
                 + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .ExcludeType<string>()
@@ -38,9 +38,10 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tName = {person.Name}",
-                              $"\tHeight = {person.Height}",
-                              $"\tAge = {person.Age+1}")
+                              "\tName = Alex",
+                              "\tSurName = Petrov",
+                              "\tHeight = 12,4",
+                              "\tAge = 20")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .Printing<int>().Using(i => (i + 1).ToString())
@@ -54,9 +55,10 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tName = {person.Name}",
-                              $"\tHeight = {person.Height.ToString(CultureInfo.GetCultureInfo("ru"))}",
-                              $"\tAge = {person.Age}")
+                              "\tName = Alex",
+                              "\tSurName = Petrov",
+                              "\tHeight = 12,4",
+                              "\tAge = 19")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .Printing<double>().Using(CultureInfo.GetCultureInfo("ru"))
@@ -71,9 +73,10 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tName = {person.Name}",
-                              $"\tHeight = {person.Height.GetType().ToString()}",
-                              $"\tAge = {person.Age}")
+                              "\tName = Alex",
+                              "\tSurName = Petrov",
+                              "\tHeight = System.Double",
+                              "\tAge = 19")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .Printing(p => p.Height).Using(height => (height.GetType()).ToString())
@@ -87,12 +90,14 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tName = {person.Name.Substring(0,3)}",
-                              $"\tHeight = {person.Height}",
-                              $"\tAge = {person.Age}")
+                              "\tName = Al",
+                              "\tSurName = Petro",
+                              "\tHeight = 12,4",
+                              "\tAge = 19")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
-                .Printing(p => p.Name).TrimToLength(3)
+                .Printing(p => p.Name).TrimToLength(2)
+                .Printing(p => p.SurName).TrimToLength(5)
                 .PrintToString(person);
             actual.Should().Be(expected);
         }
@@ -103,8 +108,9 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tHeight = {person.Height}",
-                              $"\tAge = {person.Age}")
+                              "\tSurName = Petrov",
+                              "\tHeight = 12,4",
+                              "\tAge = 19")
                           + Environment.NewLine;
             var actual = ObjectPrinter.For<Person>()
                 .ExcludeProp(p => p.Name)
@@ -118,8 +124,9 @@ namespace ObjectPrinting.Tests
             var expected =string.Join(Environment.NewLine,  
                               "Person",
                               "\tId = Guid",
-                              $"\tHeight = {person.Height}",
-                              $"\tAge = {person.Age}")
+                              "\tSurName = Petrov",
+                              "\tHeight = 12,4",
+                              "\tAge = 19")
                           + Environment.NewLine;
             var actual = person.PrintToString(
                 o => o
@@ -127,5 +134,6 @@ namespace ObjectPrinting.Tests
             );
             actual.Should().Be(expected);
         }
+
     }
 }
