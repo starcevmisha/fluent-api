@@ -139,7 +139,7 @@ namespace ObjectPrinting
         }
 
 
-        internal PrintingConfig<TOwner> SetMaxNestedLevel(int max)
+        public PrintingConfig<TOwner> SetMaxNestedLevel(int max)
         {
             maxNestedLevel = max;
             return this;
