@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ObjectPrinting
@@ -12,11 +13,12 @@ namespace ObjectPrinting
     public class PrintingConfig<TOwner>
     {
         private int? maxNestedLevel = null;
-        internal readonly Dictionary<string, int> TrimStringProperty = 
+
+        private readonly Dictionary<string, int> TrimStringProperty = 
             new Dictionary<string, int>();
         private readonly HashSet<Type> excludedTypes= new HashSet<Type>();
         private readonly HashSet<string> excludedProperties = new HashSet<string>();
-        internal readonly Dictionary<Type, CultureInfo> Cultures 
+        private readonly Dictionary<Type, CultureInfo> Cultures 
             = new Dictionary<Type, CultureInfo>();
         private readonly Dictionary<Type, Delegate> typeSerializator 
             = new Dictionary<Type, Delegate>();
@@ -100,7 +102,7 @@ namespace ObjectPrinting
                     continue;
                 if (excludedTypes.Contains(propertyInfo.PropertyType))
                     continue;
-                if (maxNestedLevel.HasValue && identation.Length > maxNestedLevel)
+                if (maxNestedLevel.HasValue && nestingLevel >= maxNestedLevel)
                 {
                     sb.Insert(sb.Length - Environment.NewLine.Length, "{}");
                     break;
@@ -137,10 +139,47 @@ namespace ObjectPrinting
         }
 
 
-        public PrintingConfig<TOwner> SetMaxNestedLevel(int max)
+        internal PrintingConfig<TOwner> SetMaxNestedLevel(int max)
         {
             maxNestedLevel = max;
             return this;
         }
+
+        internal static void TrimStringPropertyDictAdd(
+            PrintingConfig<TOwner> printingConfig,
+            string propName,
+            int length)
+        {
+            printingConfig.TrimStringProperty.Add(propName, length);
+        }
+        internal static void CulturesDictAdd(
+            PrintingConfig<TOwner> printingConfig,
+            Type type,
+            CultureInfo cultureInfo)
+        {
+            printingConfig.Cultures.Add(type, cultureInfo);
+        }
+        
+        
     }
+
+    public static class PrintingConfigExtensions
+    {
+        public static void TrimStringPropertyDictAdd<TOwner>(
+            this PrintingConfig<TOwner> printingConfig,
+            string propName,
+            int length)
+        {
+            PrintingConfig<TOwner>.TrimStringPropertyDictAdd(printingConfig, propName, length);
+        }
+
+        public static void CulturesDictAdd<TOwner>(
+            this PrintingConfig<TOwner> printingConfig,
+            Type type,
+            CultureInfo cultureInfo)
+        {
+            PrintingConfig<TOwner>.CulturesDictAdd(printingConfig, type, cultureInfo);
+        }
+    }
+    
 }

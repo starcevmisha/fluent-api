@@ -168,7 +168,6 @@ namespace ObjectPrinting.Tests
                 o => o
                     .SetMaxNestedLevel(1)
                 );
-//            Console.WriteLine(actual);
             actual.Should().Be(expected);
         }
         [Test]
@@ -202,7 +201,6 @@ namespace ObjectPrinting.Tests
                 o => o
                     .SetMaxNestedLevel(2)
             );
-//            Console.WriteLine(actual);
             actual.Should().Be(expected);
         }
     }
