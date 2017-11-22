@@ -72,7 +72,6 @@ namespace ObjectPrinting
             return PrintToString(obj, 0);
         }
 
-        private bool IsStop = false;
         
         private string PrintToString(object obj, int nestingLevel)
         {
@@ -158,27 +157,6 @@ namespace ObjectPrinting
             CultureInfo cultureInfo)
         {
             printingConfig.Cultures.Add(type, cultureInfo);
-        }
-        
-        
-    }
-
-    public static class PrintingConfigExtensions
-    {
-        public static void TrimStringPropertyDictAdd<TOwner>(
-            this PrintingConfig<TOwner> printingConfig,
-            string propName,
-            int length)
-        {
-            PrintingConfig<TOwner>.TrimStringPropertyDictAdd(printingConfig, propName, length);
-        }
-
-        public static void CulturesDictAdd<TOwner>(
-            this PrintingConfig<TOwner> printingConfig,
-            Type type,
-            CultureInfo cultureInfo)
-        {
-            PrintingConfig<TOwner>.CulturesDictAdd(printingConfig, type, cultureInfo);
         }
     }
     
